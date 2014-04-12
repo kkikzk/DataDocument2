@@ -8,9 +8,9 @@ module DataDocument
       @symbols = ((symbols == nil) ? [] : symbols.uniq.compact)
     end
 
-    def parse(str, debug = false)
+    def parse(str)
       @str = str
-      tokenize(debug)
+      tokenize
     end
 
     def popToken
@@ -53,7 +53,7 @@ module DataDocument
             return true
           end
         end
-        false
+        return false
       end
 
       def moveNext
@@ -92,7 +92,7 @@ module DataDocument
       end
     end
 
-    def tokenize(debug)
+    def tokenize()
       @tokens = []
       current_pos = StringIterator.new(@str)
 

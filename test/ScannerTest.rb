@@ -45,14 +45,14 @@ class ScannerTest < Test::Unit::TestCase
 
   def testSymbols
     # arrange
-    sc = Scanner.new(nil, [',', '{', '}'])
+    sc = Scanner.new(nil, ['..', '{', '}'])
 
     # act
-    sc.parse('{,}')
+    sc.parse('{..}')
 
     # assert
     assert_equal(['{', '{'], sc.popToken)
-    assert_equal([',', ','], sc.popToken)
+    assert_equal(['..', '..'], sc.popToken)
     assert_equal(['}', '}'], sc.popToken)
     assert_equal([false, false], sc.popToken)
   end
@@ -80,7 +80,7 @@ class ScannerTest < Test::Unit::TestCase
     sc = Scanner.new(nil, [','])
 
     # act
-    sc.parse('A,B', true)
+    sc.parse('A,B')
 
     # assert
     assert_equal([:IDENT, 'A'], sc.popToken)
