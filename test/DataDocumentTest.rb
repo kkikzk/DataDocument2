@@ -56,6 +56,15 @@ class ScannerTest < Test::Unit::TestCase
     assert_equal([false, false], sc.popToken)
   end
 
+  def testDuplicationKeywordsAndSymbols
+    # arrange / act
+    sc = Scanner.new(['struct', 'struct'], [',', ','])
+
+    # assert
+    assert_equal(['struct'], sc.keywords)
+    assert_equal([','], sc.symbols)
+  end
+
   def testContinuesSymbol
     # arrange
     sc = Scanner.new(nil, [','])

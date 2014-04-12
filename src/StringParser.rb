@@ -1,9 +1,11 @@
 # -*- encoding: utf-8 -*-
 
 class Scanner
+  attr_reader :keywords, :symbols
+
   def initialize(keywords, symbols)
-    @keywords = ((keywords == nil) ? [] : keywords)
-    @symbols = ((symbols == nil) ? [] : symbols)
+    @keywords = ((keywords == nil) ? [] : keywords.uniq)
+    @symbols = ((symbols == nil) ? [] : symbols.uniq)
   end
 
   def parse(str)
