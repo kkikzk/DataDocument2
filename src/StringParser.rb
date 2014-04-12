@@ -1,6 +1,11 @@
 # -*- encoding: utf-8 -*-
 
 class Scanner
+  KEYWORDS = [
+    'struct',
+    'enum'
+  ]
+
   def initialize(str)
     if str.length < 1 then
       @tokens = []
@@ -10,13 +15,12 @@ class Scanner
   end
   def popToken
     token = @tokens.shift
-    case token
-    when nil
-      return [false, false]
-    when 'struct'
-      return ['struct', 'struct']
+    if (token == nil)
+      [false, false]
+    elsif (KEYWORDS.include? token)
+      [token, token]
     else
-      return [:IDENT, token]
+      [:IDENT, token]
     end
   end
 end

@@ -27,5 +27,6 @@ class ScannerTest < Test::Unit::TestCase
 
     # assert
     assert_equal(['struct', 'struct'], sc.popToken)
+    assert_equal(['enum', 'enum'], sc.popToken)
   end
 end
