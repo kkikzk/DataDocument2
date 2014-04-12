@@ -11,4 +11,13 @@ class ScannerTest < Test::Unit::TestCase
     # assert
     assert_equal([false, false], sc.popToken)
   end
+
+  def testSimpleTokenize
+    # act
+    sc = Scanner.new('A B')
+
+    # assert
+    assert_equal([:IDENT, 'A'])
+    assert_equal([:IDENT, 'B'])
+  end
 end
