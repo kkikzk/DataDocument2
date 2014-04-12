@@ -21,12 +21,14 @@ class Scanner
     token = @tokens.shift
     if (token == nil)
       [false, false]
-    elsif (KEYWORDS.include? token)
-      [token, token]
-    elsif (SYMBOLS.include? token)
+    elsif isReserved?(token)
       [token, token]
     else
       [:IDENT, token]
     end
+  end
+
+  def isReserved?(token)
+    KEYWORDS.include?(token) || SYMBOLS.include?(token)
   end
 end
