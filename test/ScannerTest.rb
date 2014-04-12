@@ -4,7 +4,7 @@ require '../src/Scanner'
 
 class ScannerTest < Test::Unit::TestCase
   include DataDocument
-  
+
   def testEmptyString
     # arrange
     sc = Scanner.new(nil, nil)
@@ -80,9 +80,10 @@ class ScannerTest < Test::Unit::TestCase
     sc = Scanner.new(nil, [','])
 
     # act
-    sc.parse('A,B')
+    sc.parse('A,B', true)
 
     # assert
+    p sc.tokens
     assert_equal([:IDENT, 'A'], sc.popToken)
     assert_equal([',', ','], sc.popToken)
     assert_equal([:IDENT, 'B'], sc.popToken)
