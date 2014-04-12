@@ -19,6 +19,7 @@ class ScannerTest < Test::Unit::TestCase
     # assert
     assert_equal([:IDENT, 'A'], sc.popToken)
     assert_equal([:IDENT, 'B'], sc.popToken)
+    assert_equal([false, false], sc.popToken)
   end
 
   def testKeywords
@@ -28,5 +29,15 @@ class ScannerTest < Test::Unit::TestCase
     # assert
     assert_equal(['struct', 'struct'], sc.popToken)
     assert_equal(['enum', 'enum'], sc.popToken)
+    assert_equal([false, false], sc.popToken)
+  end
+
+  def testSymbols
+    # act
+    sc = Scanner.new(',')
+
+    # assert
+    assert_equal([',', ','])
+    assert_equal([false, false], sc.popToken)
   end
 end
