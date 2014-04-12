@@ -13,6 +13,8 @@ class Scanner
     case token
     when nil
       return [false, false]
+    when 'struct'
+      return ['struct', 'struct']
     else
       return [:IDENT, token]
     end

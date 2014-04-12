@@ -20,4 +20,12 @@ class ScannerTest < Test::Unit::TestCase
     assert_equal([:IDENT, 'A'], sc.popToken)
     assert_equal([:IDENT, 'B'], sc.popToken)
   end
+
+  def testKeywords
+    # act
+    sc = Scanner.new('struct enum')
+
+    # assert
+    assert_equal(['struct', 'struct'], sc.popToken)
+  end
 end
