@@ -8,4 +8,11 @@ class ScannerTest < Test::Unit::TestCase
   include DataDocument
   include StringParser
 
+  def testEmptyString
+    # act
+    sc = Scanner.new('')
+
+    # assert
+    assesrt_equal([false, false], sc.popToken)
+  end
 end
