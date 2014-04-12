@@ -33,23 +33,26 @@ class ScannerTest < Test::Unit::TestCase
     sc = Scanner.new(['struct', 'enum'], nil)
 
     # act
-    sc.parse('struct enum')
+    sc.parse('struct structenum enum')
 
     # assert
     assert_equal(['struct', 'struct'], sc.popToken)
+    assert_equal([:IDENT, 'structenum'], sc.popToken)
     assert_equal(['enum', 'enum'], sc.popToken)
     assert_equal([false, false], sc.popToken)
   end
 
   def testSymbols
     # arrange
-    sc = Scanner.new(nil, [','])
+    sc = Scanner.new(nil, [',', '{', '}'])
 
     # act
-    sc.parse(',')
+    sc.parse('{,}')
 
     # assert
+    assert_equal(['{', '{'], sc.popToken)
     assert_equal([',', ','], sc.popToken)
+    assert_equal(['}', '}'], sc.popToken)
     assert_equal([false, false], sc.popToken)
   end
 
@@ -64,6 +67,20 @@ class ScannerTest < Test::Unit::TestCase
     assert_equal([:IDENT, 'A'], sc.popToken)
     assert_equal([',', ','], sc.popToken)
     assert_equal([:IDENT, 'B'], sc.popToken)
+    assert_equal([false, false], sc.popToken)
+  end
+
+  def testContinuesSymbolAndKeyword
+    # arrange
+    sc = Scanner.new(['struct', 'enum'], [','])
+
+    # act
+    sc.parse('struct,enum')
+
+    # assert
+    assert_equal(['struct', 'struct'], sc.popToken)
+    assert_equal([',', ','], sc.popToken)
+    assert_equal(['enum', 'enum'], sc.popToken)
     assert_equal([false, false], sc.popToken)
   end
 
