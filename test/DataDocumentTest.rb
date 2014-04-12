@@ -44,13 +44,27 @@ class ScannerTest < Test::Unit::TestCase
   def testLineComment
     # arrange
     sc = Scanner.new(<<-'EOS')
-      A//Comment
+      A//comment
       B
     EOS
 
     # act / assert
     assert_equal([:IDENT, 'A'], sc.popToken)
     assert_equal([:IDENT, 'B'], sc.popToken)
+    assert_equal([false, false], sc.popToken)
+  end
+
+  def testMultiLineComment
+    # arrange
+    sc = Scanner.new(<<-'EOS')
+      A/*Comment
+      B//still in comment
+      */C
+    EOS
+
+    # act / assert
+    assert_equal([:IDENT, 'A'], sc.popToken)
+    assert_equal([:IDENT, 'C'], sc.popToken)
     assert_equal([false, false], sc.popToken)
   end
 end

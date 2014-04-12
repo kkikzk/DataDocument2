@@ -10,12 +10,16 @@ class Scanner
   ]
 
   def initialize(str)
-    str = Scanner.removeLineComment(str.strip)
+    str = Scanner.removeLineComment(Scanner.removeMultiLineComment(str.strip))
     if str.length < 1 then
       @tokens = []
     else
       @tokens = str.split(/[\s]+/)
     end
+  end
+
+  def self.removeMultiLineComment(str)
+    str.gsub(/\/\*.*\*\//m, ' ')
   end
 
   def self.removeLineComment(str)
