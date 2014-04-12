@@ -5,39 +5,52 @@ require './StringParser'
 
 class ScannerTest < Test::Unit::TestCase
   def testEmptyString
-    # act
+    # arrange
     sc = Scanner.new('')
 
-    # assert
+    # act / assert
     assert_equal([false, false], sc.popToken)
   end
 
   def testSimpleTokenize
-    # act
+    # arrange
     sc = Scanner.new('A B')
 
-    # assert
+    # act / assert
     assert_equal([:IDENT, 'A'], sc.popToken)
     assert_equal([:IDENT, 'B'], sc.popToken)
     assert_equal([false, false], sc.popToken)
   end
 
   def testKeywords
-    # act
+    # arrange
     sc = Scanner.new('struct enum')
 
-    # assert
+    # act / assert
     assert_equal(['struct', 'struct'], sc.popToken)
     assert_equal(['enum', 'enum'], sc.popToken)
     assert_equal([false, false], sc.popToken)
   end
 
   def testSymbols
-    # act
+    # arrange
     sc = Scanner.new(',')
 
-    # assert
+    # act / assert
     assert_equal([',', ','], sc.popToken)
+    assert_equal([false, false], sc.popToken)
+  end
+
+  def testLineComment
+    # arrange
+    sc = Scanner.new(<<-'EOS')
+      A//Comment
+      B
+    EOS
+
+    # act / assert
+    assert_equal([:IDENT, 'A'], sc.popToken)
+    assert_equal([:IDENT, 'B'], sc.popToken)
     assert_equal([false, false], sc.popToken)
   end
 end

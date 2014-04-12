@@ -10,11 +10,16 @@ class Scanner
   ]
 
   def initialize(str)
+    str = Scanner.removeLineComment(str.strip)
     if str.length < 1 then
       @tokens = []
     else
       @tokens = str.split(/[\s]+/)
     end
+  end
+
+  def self.removeLineComment(str)
+    str.gsub(/\/\/.*$/, '')
   end
 
   def popToken
