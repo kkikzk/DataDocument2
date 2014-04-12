@@ -10,7 +10,7 @@ class Scanner
   ]
 
   def initialize(str)
-    str = Scanner.removeLineComment(Scanner.removeMultiLineComment(str.strip))
+    str = Scanner.separateSymbols(Scanner.removeLineComment(Scanner.removeMultiLineComment(str.strip))).strip
     if str.length < 1 then
       @tokens = []
     else
@@ -24,6 +24,12 @@ class Scanner
 
   def self.removeLineComment(str)
     str.gsub(/\/\/.*$/, '')
+  end
+
+  def self.separateSymbols(str)
+    clonedString = str.clone
+    SYMBOLS.each{|value| clonedString.gsub!(value, ' ' + value + ' ')}
+    return clonedString
   end
 
   def popToken
