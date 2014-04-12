@@ -4,8 +4,8 @@ module DataDocument
     attr_reader :keywords, :symbols
 
     def initialize(keywords, symbols)
-      @keywords = ((keywords == nil) ? [] : keywords.uniq)
-      @symbols = ((symbols == nil) ? [] : symbols.uniq)
+      @keywords = ((keywords == nil) ? [] : keywords.uniq.compact)
+      @symbols = ((symbols == nil) ? [] : symbols.uniq.compact)
     end
 
     def parse(str)
