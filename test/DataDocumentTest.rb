@@ -17,7 +17,7 @@ class ScannerTest < Test::Unit::TestCase
     sc = Scanner.new('A B')
 
     # assert
-    assert_equal([:IDENT, 'A'])
-    assert_equal([:IDENT, 'B'])
+    assert_equal([:IDENT, 'A'], sc.popToken)
+    assert_equal([:IDENT, 'B'], sc.popToken)
   end
 end

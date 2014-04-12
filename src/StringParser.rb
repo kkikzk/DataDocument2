@@ -2,9 +2,19 @@
 
 class Scanner
   def initialize(str)
-    @str = str
+    if str.length < 1 then
+      @tokens = []
+    else
+      @tokens = str.split(/[\s]+/)
+    end
   end
   def popToken
-    [false, false]
+    token = @tokens.shift
+    case token
+    when nil
+      return [false, false]
+    else
+      return [:IDENT, token]
+    end
   end
 end
