@@ -15,12 +15,15 @@ module DataDocument
 
     def popToken
       token = @tokens.shift
-      if (token == nil)
+      case token
+      when nil
         [false, false]
-      elsif isReserved?(token)
-        [token, token]
+      when /^[\d]+[\.]?[\d]*\z/
+        token.include?('.') ? [:NUMBER, token.to_f] : [:NUMBER, token.to_i]
+      when /^\"(.*)\"\z/m
+        [:STRING, $1]
       else
-        [:IDENT, token]
+        isReserved?(token) ? [token, token] : [:IDENT, token]
       end
     end
 
@@ -28,18 +31,22 @@ module DataDocument
 
     class StringIterator
       attr_reader :index
+
       def initialize(str)
         @str = str
         @index = 0
         @mark_pos = -1
       end
+
       def markSet
         @mark_pos = @index
       end
+
       def is(target_string)
         end_pos = (@index + target_string.length - 1)
         @str[@index..end_pos] == target_string
       end
+
       def isIn(target_list)
         target_list.each do |target|
           if is(target) then
@@ -48,28 +55,36 @@ module DataDocument
         end
         false
       end
+
       def moveNext
         @index += 1
       end
+
       def moveToTheEndOfTheLine
         @index += (@str[@index..-1] =~ /$/)
       end
+
       def moveTo(target)
         esceped_target = Regexp.escape(target)
         @index += (@str[@index..-1] =~ /#{esceped_target}/m) + target.length
       end
+
       def [](range)
         @str[range]
       end
+
       def <(pos)
         @index < pos
       end
+
       def char
         @str[@index]
       end
+
       def isMarked
         @mark_pos != -1
       end
+
       def markToLastPos
         result = @str[@mark_pos..(@index - 1)]
         @mark_pos = -1
@@ -79,11 +94,6 @@ module DataDocument
 
     def tokenize(debug)
       @tokens = []
-
-      if str.length < 1 then
-        return
-      end
-
       current_pos = StringIterator.new(@str)
 
       while current_pos < @str.length do
@@ -104,6 +114,16 @@ module DataDocument
             @tokens.push current_pos.markToLastPos
           end
           current_pos.moveTo('*/')
+          next
+        elsif current_pos.is('"') then
+          if current_pos.isMarked then
+            @tokens.push current_pos.markToLastPos
+          end
+          current_pos.markSet
+          current_pos.moveNext
+          current_pos.moveTo('"')
+          p current_pos.index
+          @tokens.push current_pos.markToLastPos
           next
         elsif current_pos.isIn(@symbols) then
           @symbols.each do |symbol|

@@ -83,7 +83,6 @@ class ScannerTest < Test::Unit::TestCase
     sc.parse('A,B', true)
 
     # assert
-    p sc.tokens
     assert_equal([:IDENT, 'A'], sc.popToken)
     assert_equal([',', ','], sc.popToken)
     assert_equal([:IDENT, 'B'], sc.popToken)
@@ -133,6 +132,37 @@ class ScannerTest < Test::Unit::TestCase
 
     # assert
     assert_equal([:IDENT, 'A'], sc.popToken)
+    assert_equal([:IDENT, 'C'], sc.popToken)
+    assert_equal([false, false], sc.popToken)
+  end
+
+  def testNumber
+    # arrange
+    sc = Scanner.new(nil, [','])
+  
+    # act
+    sc.parse('9,1.5')
+  
+    # assert
+    assert_equal([:NUMBER, 9], sc.popToken)
+    assert_equal([',', ','], sc.popToken)
+    assert_equal([:NUMBER, 1.5], sc.popToken)
+    assert_equal([false, false], sc.popToken)
+  end
+
+  def testString
+    # arrange
+    sc = Scanner.new(nil, [','])
+  
+    # act
+    sc.parse(<<-'EOS')
+      A"//"B"/**/"C
+    EOS
+
+    assert_equal([:IDENT, 'A'], sc.popToken)
+    assert_equal([:STRING, '//'], sc.popToken)
+    assert_equal([:IDENT, 'B'], sc.popToken)
+    assert_equal([:STRING, '/**/'], sc.popToken)
     assert_equal([:IDENT, 'C'], sc.popToken)
     assert_equal([false, false], sc.popToken)
   end
