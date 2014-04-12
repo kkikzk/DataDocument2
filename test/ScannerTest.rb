@@ -1,9 +1,10 @@
 # -*- encoding: utf-8 -*-
 require 'test/unit'
-require './ParseResult'
-require './StringParser'
+require '../src/Scanner'
 
 class ScannerTest < Test::Unit::TestCase
+  include DataDocument
+  
   def testEmptyString
     # arrange
     sc = Scanner.new(nil, nil)
@@ -63,6 +64,15 @@ class ScannerTest < Test::Unit::TestCase
     # assert
     assert_equal(['struct'], sc.keywords)
     assert_equal([','], sc.symbols)
+  end
+
+  def testNilKeywordsAndSymbols
+    # arrange / act
+    sc = Scanner.new(['struct', nil, 'enum'], ['{', nil, '}'])
+
+    # assert
+    assert_equal(['struct', 'enum'], sc.keywords)
+    assert_equal(['{', '}'], sc.symbols)
   end
 
   def testContinuesSymbol
