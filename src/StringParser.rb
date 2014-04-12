@@ -1,16 +1,13 @@
 # -*- encoding: utf-8 -*-
 
 class Scanner
-  KEYWORDS = [
-    'struct',
-    'enum'
-  ]
-  SYMBOLS = [
-    ','
-  ]
+  def initialize(keywords, symbols)
+    @keywords = ((keywords == nil) ? [] : keywords)
+    @symbols = ((symbols == nil) ? [] : symbols)
+  end
 
-  def initialize(str)
-    str = Scanner.separateSymbols(Scanner.removeLineComment(Scanner.removeMultiLineComment(str.strip))).strip
+  def parse(str)
+    str = separateSymbols(Scanner.removeLineComment(Scanner.removeMultiLineComment(str.strip))).strip
     if str.length < 1 then
       @tokens = []
     else
@@ -26,9 +23,9 @@ class Scanner
     str.gsub(/\/\/.*$/, '')
   end
 
-  def self.separateSymbols(str)
+  def separateSymbols(str)
     clonedString = str.clone
-    SYMBOLS.each{|value| clonedString.gsub!(value, ' ' + value + ' ')}
+    @symbols.each{|value| clonedString.gsub!(value, ' ' + value + ' ')}
     return clonedString
   end
 
@@ -44,6 +41,6 @@ class Scanner
   end
 
   def isReserved?(token)
-    KEYWORDS.include?(token) || SYMBOLS.include?(token)
+    @keywords.include?(token) || @symbols.include?(token)
   end
 end

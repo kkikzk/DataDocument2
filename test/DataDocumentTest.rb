@@ -6,17 +6,23 @@ require './StringParser'
 class ScannerTest < Test::Unit::TestCase
   def testEmptyString
     # arrange
-    sc = Scanner.new('')
+    sc = Scanner.new(nil, nil)
 
-    # act / assert
+    # act
+    sc.parse('')
+
+    # assert
     assert_equal([false, false], sc.popToken)
   end
 
   def testSimpleTokenize
     # arrange
-    sc = Scanner.new('A B')
+    sc = Scanner.new(nil, nil)
 
-    # act / assert
+    # act
+    sc.parse('A B')
+
+    # assert
     assert_equal([:IDENT, 'A'], sc.popToken)
     assert_equal([:IDENT, 'B'], sc.popToken)
     assert_equal([false, false], sc.popToken)
@@ -24,9 +30,12 @@ class ScannerTest < Test::Unit::TestCase
 
   def testKeywords
     # arrange
-    sc = Scanner.new('struct enum')
+    sc = Scanner.new(['struct', 'enum'], nil)
 
-    # act / assert
+    # act
+    sc.parse('struct enum')
+
+    # assert
     assert_equal(['struct', 'struct'], sc.popToken)
     assert_equal(['enum', 'enum'], sc.popToken)
     assert_equal([false, false], sc.popToken)
@@ -34,18 +43,24 @@ class ScannerTest < Test::Unit::TestCase
 
   def testSymbols
     # arrange
-    sc = Scanner.new(',')
+    sc = Scanner.new(nil, [','])
 
-    # act / assert
+    # act
+    sc.parse(',')
+
+    # assert
     assert_equal([',', ','], sc.popToken)
     assert_equal([false, false], sc.popToken)
   end
 
   def testContinuesSymbol
     # arrange
-    sc = Scanner.new('A,B')
+    sc = Scanner.new(nil, [','])
 
-    # act / assert
+    # act
+    sc.parse('A,B')
+
+    # assert
     assert_equal([:IDENT, 'A'], sc.popToken)
     assert_equal([',', ','], sc.popToken)
     assert_equal([:IDENT, 'B'], sc.popToken)
@@ -54,12 +69,15 @@ class ScannerTest < Test::Unit::TestCase
 
   def testLineComment
     # arrange
-    sc = Scanner.new(<<-'EOS')
+    sc = Scanner.new(nil, nil)
+
+    # act
+    sc.parse(<<-'EOS')
       A//comment
       B
     EOS
 
-    # act / assert
+    # assert
     assert_equal([:IDENT, 'A'], sc.popToken)
     assert_equal([:IDENT, 'B'], sc.popToken)
     assert_equal([false, false], sc.popToken)
@@ -67,13 +85,16 @@ class ScannerTest < Test::Unit::TestCase
 
   def testMultiLineComment
     # arrange
-    sc = Scanner.new(<<-'EOS')
+    sc = Scanner.new(nil, nil)
+
+    # act
+    sc.parse(<<-'EOS')
       A/*comment
       B//still in comment
       */C
     EOS
 
-    # act / assert
+    # assert
     assert_equal([:IDENT, 'A'], sc.popToken)
     assert_equal([:IDENT, 'C'], sc.popToken)
     assert_equal([false, false], sc.popToken)
