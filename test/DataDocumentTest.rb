@@ -37,7 +37,7 @@ class ScannerTest < Test::Unit::TestCase
     sc = Scanner.new(',')
 
     # assert
-    assert_equal([',', ','])
+    assert_equal([',', ','], sc.popToken)
     assert_equal([false, false], sc.popToken)
   end
 end
