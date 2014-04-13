@@ -101,7 +101,7 @@ class DocToCSharpTest < Test::Unit::TestCase
         [attr_name("Data8Name")]
         decimal Data8;
         [attr_name("Data9Name")]
-        [attr_fixed_data_length()]
+        [attr_fixed_length_string("10")]
         string Data9(0..10) = "ABCD";
         [attr_name("Data10Name")]
         string Data10(0..20);
