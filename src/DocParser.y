@@ -2,7 +2,6 @@ class DocParser
   token IDENT
 	token NUMBER
 	token STRING
-	token ATTRIBUTE
 
 rule
   document: { result = ParseResult.new() }
@@ -24,8 +23,8 @@ rule
 	attribute_decl: each_attribute_decl { result = [val[0]] }
 	  | attribute_decl ',' each_attribute_decl { val[0].push(val[2]); result = val[0] }
 
-	each_attribute_decl: IDENT '(' STRING ')'
-  	{ result = Attribute.new(val[0], val[2]) }
+	each_attribute_decl: IDENT '(' STRING ')' { result = Attribute.new(val[0], val[2]) }
+	  | IDENT '(' ')' { result = Attribute.new(val[0], '') }
 
 	struct: attributes 'struct' IDENT base_type_decl '{' struct_element_decl '}'
 	  { result = StructData.new(val[2], val[0], val[3], val[5]) }
@@ -51,6 +50,11 @@ rule
 		| 'uint8' { result = val[0] }
 		| 'bool' { result = val[0] }
 		| 'string' { result = val[0] }
+		| 'decimal' { result = val[0] }
+		| 'float' { result = val[0] }
+		| 'double' { result = val[0] }
+		| 'char' { result = val[0] }
+		| IDENT { result = val[0] }
 
 	unnamed_struct: 'struct' '{' struct_element_decl '}'
 	  { result = StructData.new('unnamed_struct', [], nil, val[2]) }
@@ -94,7 +98,12 @@ def parse(str)
 		'uint16',
 		'uint8',
 		'bool',
-		'string'
+		'string',
+		'decimal',
+		'float',
+		'double',
+		'char',
+		'double'
 	]
 	symbols = [
 	  ',',
